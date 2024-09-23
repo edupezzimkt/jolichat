@@ -149,32 +149,19 @@ Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá
 curta pegando informações dos passeios e tirando as dúvidas dos turistas. 
 Quando o cliente quiser informações de produtos, evite falar sobre os passeios."""
 
-# Inicializa o histórico se não existir
 if 'historico' not in st.session_state:
-    st.session_state['historico'] = []
-
-# Função para gerar texto (você deve implementar isso)
-def geracao_texto(historico, texto_completo_pdfs, prompt):
-    # Lógica para gerar texto baseado no histórico
-    # Retorne o novo histórico aqui, incluindo a resposta do assistente
-    return historico  # Exemplo, você deve ajustar isso
-
-# Exibir o histórico de mensagens
-for mensagem in st.session_state['historico']:
-    if mensagem['role'] == 'user':
-        st.write(f"Cliente: {mensagem['content']}")
-    elif mensagem['role'] == 'assistant':
-        st.write(f"Joli: {mensagem['content']}")
+    st.session_state.historico = []
 
 if 'input_usuario' not in st.session_state:
     st.session_state.input_usuario = ''
-    
-# Captura o input do usuário
+
+# Criação do campo de texto
 user_input = st.text_input("Seu input:", key='input_usuario')
 
 if st.button("Enviar"):
-    # Processa a entrada aqui
-    st.session_state['historico'].append({'role': 'assistant', 'content': "Entrada processada"})
+    # Processar a entrada
+    st.session_state.historico.append({'role': 'assistant', 'content': "Entrada processada"})
     
-    # Em vez de definir o estado da sessão diretamente, você poderia limpar a entrada
-    st.session_state.input_usuario = ''
+    # Limpar o campo de entrada
+    st.session_state.input_usuario = ''  # Isso deve funcionar agora
+    st.experimental_rerun()  # Recarrega a aplicação para refletir as mudanças
