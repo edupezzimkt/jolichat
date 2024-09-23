@@ -156,8 +156,8 @@ if 'historico' not in st.session_state:
 # Função para gerar texto (você deve implementar isso)
 def geracao_texto(historico, texto_completo_pdfs, prompt):
     # Lógica para gerar texto baseado no histórico
-    # Retorne o novo histórico aqui
-    return historico
+    # Retorne o novo histórico aqui, incluindo a resposta do assistente
+    return historico  # Exemplo, você deve ajustar isso
 
 # Exibir o histórico de mensagens
 for mensagem in st.session_state['historico']:
@@ -167,14 +167,14 @@ for mensagem in st.session_state['historico']:
         st.write(f"Joli: {mensagem['content']}")
 
 # Captura o input do usuário
-input_usuario = st.text_input('Cliente:', '')
+input_usuario = st.text_input('Cliente:', '', key='input_usuario')
 
 if st.button('Enviar'):
     if input_usuario:
         st.session_state['historico'].append({'role': 'user', 'content': input_usuario})
+        # Gera a resposta e atualiza o histórico
         mensagens = geracao_texto(st.session_state['historico'], texto_completo_pdfs, prompt)
-        st.session_state['historico'] = mensagens
+        st.session_state['historico'].append({'role': 'assistant', 'content': mensagens[-1]['content']})  # Adiciona a última resposta do assistente
 
-# Após exibir o histórico, o input é exibido
-if input_usuario or st.session_state['historico']:
-    st.text_input('Cliente:', '', key='input_usuario')
+        # Limpa o input após enviar
+        st.session_state.input_usuario = ''
