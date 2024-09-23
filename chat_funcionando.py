@@ -151,12 +151,11 @@ def geracao_texto(mensagens, contexto, prompt):
 st.title("Bem-vindo ao chat da Jolimont🍷 :)")
 
 mensagens = []
-prompt = """Você é um assistente bem humorado especialista em turismo e vinhos. 
+prompt = """Você é um assistente bem humorado especialista em turismo. 
 Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá de forma 
-curta pegando informações dos passeios e tirando as dúvidas dos turistas. 
-Quando o cliente quiser informações de produtos, evite falar sobre os passeios."""
+curta pegando informações dos passeios e tirando as dúvidas dos turistas."""
 
-input_usuario = st.text_input('Cliente:', '')
+input_usuario = st.text_input('Faça sua pergunta:', '')
 
 if st.button('Enviar'):
     if input_usuario:
