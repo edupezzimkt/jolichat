@@ -1,13 +1,12 @@
-import openai
-from dotenv import load_dotenv, find_dotenv
+import openai 
 import fitz  # PyMuPDF
 import json
 import os
 import tiktoken
+import streamlit as st
 
-_ = load_dotenv(find_dotenv())
-
-client = openai.Client()
+# Carregar a chave da OpenAI dos secrets do Streamlit
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 class Chat:
     def __init__(self):
@@ -17,7 +16,6 @@ class Chat:
     def get_response(self, message):
         # Processa a mensagem e retorna uma resposta
         return "Resposta do chat"
-    
     
 # Função para extrair texto do PDF
 def extrair_texto_pdf(caminho_pdf):
@@ -126,20 +124,18 @@ def geracao_texto(mensagens, contexto, prompt):
         mensagens.append({'role': 'assistant', 'content': resposta_cache})
         return mensagens
     
-    resposta = client.chat.completions.create(
+    resposta = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
         messages=[{'role': 'system', 'content': prompt}] + mensagens + [{'role': 'system', 'content': contexto}],
-        model='gpt-4o-mini',
         temperature=0,
         max_tokens=800,
-        stream=True,
     )
 
     print('Joli: ', end='')
     texto_completo = ''
 
-
-    for resposta_stream in resposta:
-        texto = resposta_stream.choices[0].delta.content
+    for resposta_stream in resposta['choices']:
+        texto = resposta_stream['message']['content']
         if texto:
             print(texto, end='')
             texto_completo += texto
@@ -151,20 +147,21 @@ def geracao_texto(mensagens, contexto, prompt):
     
     return mensagens
 
-if __name__ == '__main__':
-    print('Bem-vindo ao chat da Jolimont🍷 :)')
-    mensagens = []
-    prompt = """ "Você é um assistente bem humorado especialista em turismo e vinhos, 
-    seu nome é Joli e vai usar os PDFs que estão na pasta arquivos e responderá de forma 
-    curta pegando informaçãoes dos passeios e tirando as dúvidas dos turistas.
-    Quando o cliente quiser informações de produtos evitar falar sobre os passeios" """
-    while True:
-        input_usuario = input('Cliente: ')
-        
-        # Verifica se o usuário deseja encerrar a conversa
-        if input_usuario.lower() in ['sair', 'encerrar', 'fim', 'obrigado']:
-            print('Até já, foi um prazer conversar com você!🍷')
-            break
-        
+# Streamlit interface
+st.title("Bem-vindo ao chat da Jolimont🍷 :)")
+
+mensagens = []
+prompt = """Você é um assistente bem humorado especialista em turismo e vinhos. 
+Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá de forma 
+curta pegando informações dos passeios e tirando as dúvidas dos turistas. 
+Quando o cliente quiser informações de produtos, evite falar sobre os passeios."""
+
+input_usuario = st.text_input('Cliente:', '')
+
+if st.button('Enviar'):
+    if input_usuario:
         mensagens.append({'role': 'user', 'content': input_usuario})
         mensagens = geracao_texto(mensagens, texto_completo_pdfs, prompt)
+        for mensagem in mensagens:
+            if mensagem['role'] == 'assistant':
+                st.write(f"Joli: {mensagem['content']}")
