@@ -149,6 +149,24 @@ Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá
 curta pegando informações dos passeios e tirando as dúvidas dos turistas. 
 Quando o cliente quiser informações de produtos, evite falar sobre os passeios."""
 
+# Inicializa o histórico se não existir
+if 'historico' not in st.session_state:
+    st.session_state['historico'] = []
+
+# Função para gerar texto (você deve implementar isso)
+def geracao_texto(historico, texto_completo_pdfs, prompt):
+    # Lógica para gerar texto baseado no histórico
+    # Retorne o novo histórico aqui
+    return historico
+
+# Exibir o histórico de mensagens
+for mensagem in st.session_state['historico']:
+    if mensagem['role'] == 'user':
+        st.write(f"Cliente: {mensagem['content']}")
+    elif mensagem['role'] == 'assistant':
+        st.write(f"Joli: {mensagem['content']}")
+
+# Captura o input do usuário
 input_usuario = st.text_input('Cliente:', '')
 
 if st.button('Enviar'):
@@ -157,9 +175,6 @@ if st.button('Enviar'):
         mensagens = geracao_texto(st.session_state['historico'], texto_completo_pdfs, prompt)
         st.session_state['historico'] = mensagens
 
-# Exibir o histórico de mensagens
-for mensagem in st.session_state['historico']:
-    if mensagem['role'] == 'user':
-        st.write(f"Cliente: {mensagem['content']}")
-    elif mensagem['role'] == 'assistant':
-        st.write(f"Joli: {mensagem['content']}")
+# Após exibir o histórico, o input é exibido
+if input_usuario or st.session_state['historico']:
+    st.text_input('Cliente:', '', key='input_usuario')
