@@ -166,15 +166,15 @@ for mensagem in st.session_state['historico']:
     elif mensagem['role'] == 'assistant':
         st.write(f"Joli: {mensagem['content']}")
 
+if 'input_usuario' not in st.session_state:
+    st.session_state.input_usuario = ''
+    
 # Captura o input do usuário
-input_usuario = st.text_input('Cliente:', '', key='input_usuario')
+user_input = st.text_input("Seu input:", key='input_usuario')
 
-if st.button('Enviar'):
-    if input_usuario:
-        st.session_state['historico'].append({'role': 'user', 'content': input_usuario})
-        # Gera a resposta e atualiza o histórico
-        mensagens = geracao_texto(st.session_state['historico'], texto_completo_pdfs, prompt)
-        st.session_state['historico'].append({'role': 'assistant', 'content': mensagens[-1]['content']})  # Adiciona a última resposta do assistente
-
-        # Limpa o input após enviar
-        st.session_state.input_usuario = ''
+if st.button("Enviar"):
+    # Processa a entrada aqui
+    st.session_state['historico'].append({'role': 'assistant', 'content': "Entrada processada"})
+    
+    # Em vez de definir o estado da sessão diretamente, você poderia limpar a entrada
+    st.session_state.input_usuario = ''
