@@ -149,19 +149,12 @@ Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá
 curta pegando informações dos passeios e tirando as dúvidas dos turistas. 
 Quando o cliente quiser informações de produtos, evite falar sobre os passeios."""
 
-if 'historico' not in st.session_state:
-    st.session_state.historico = []
+input_usuario = st.text_input('Cliente:', '')
 
-if 'input_usuario' not in st.session_state:
-    st.session_state.input_usuario = ''
-
-# Criação do campo de texto
-user_input = st.text_input("Seu input:", key='input_usuario')
-
-if st.button("Enviar"):
-    # Processar a entrada
-    st.session_state.historico.append({'role': 'assistant', 'content': "Entrada processada"})
-    
-    # Limpar o campo de entrada
-    st.session_state.input_usuario = ''  # Isso deve funcionar agora
-    st.experimental_rerun()  # Recarrega a aplicação para refletir as mudanças
+if st.button('Enviar'):
+    if input_usuario:
+        mensagens.append({'role': 'user', 'content': input_usuario})
+        mensagens = geracao_texto(mensagens, texto_completo_pdfs, prompt)
+        for mensagem in mensagens:
+            if mensagem['role'] == 'assistant':
+                st.write(f"Joli: {mensagem['content']}")
