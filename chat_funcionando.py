@@ -37,7 +37,6 @@ def carregar_cache(nome_arquivo):
 
 # Função para salvar cache em um arquivo JSON
 def salvar_cache(cache, arquivo):
-    # Converte as chaves do dicionário para strings
     cache_convertido = {str(k): v for k, v in cache.items()}
     with open(arquivo, 'w', encoding='utf-8') as f:
         json.dump(cache_convertido, f, ensure_ascii=False, indent=4)
@@ -62,8 +61,6 @@ def obter_caminhos_pdfs(pasta):
 
 # Especificar a pasta contendo os PDFs
 pasta_pdfs = 'arquivos'
-
-# Obter todos os caminhos dos PDFs na pasta
 caminhos_pdfs = obter_caminhos_pdfs(pasta_pdfs)
 
 # Carregar texto extraído dos PDFs
@@ -110,7 +107,6 @@ def gerar_respostas(partes_texto, prompt):
         respostas.append(resposta['choices'][0]['message']['content'])
     return respostas
 
-
 def contar_tokens(texto):
     enc = tiktoken.get_encoding('cl100k_base')
     return len(enc.encode(texto))
@@ -120,7 +116,6 @@ def geracao_texto(mensagens, contexto, prompt):
     
     if chave_cache in cache:
         resposta_cache = cache[chave_cache]
-        print("Joli (from cache): ", resposta_cache)
         mensagens.append({'role': 'assistant', 'content': resposta_cache})
         return mensagens
     
@@ -131,26 +126,24 @@ def geracao_texto(mensagens, contexto, prompt):
         max_tokens=800,
     )
 
-    print('Joli: ', end='')
-    texto_completo = ''
-
-    for resposta_stream in resposta['choices']:
-        texto = resposta_stream['message']['content']
-        if texto:
-            print(texto, end='')
-            texto_completo += texto
-    print()
+    texto_completo = resposta['choices'][0]['message']['content']
     
     mensagens.append({'role': 'assistant', 'content': texto_completo})
-    cache[chave_cache] = texto_completo  # Armazena a resposta no cache
-    salvar_cache(cache, cache_arquivo)  # Salva o cache em disco
+    cache[chave_cache] = texto_completo
+    salvar_cache(cache, cache_arquivo)
     
     return mensagens
 
 # Streamlit interface
 st.title("Bem-vindo ao chat da Jolimont🍷 :)")
 
-mensagens = []
+# Adicionando o logo
+st.image('logo.jpg', width=200)  # Substitua 'logo.jpg' pelo caminho da sua imagem
+
+# Inicializando o estado da sessão se não existir
+if 'historico' not in st.session_state:
+    st.session_state['historico'] = []
+
 prompt = """Você é um assistente bem humorado especialista em turismo e vinhos. 
 Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá de forma 
 curta pegando informações dos passeios e tirando as dúvidas dos turistas. 
@@ -160,8 +153,13 @@ input_usuario = st.text_input('Cliente:', '')
 
 if st.button('Enviar'):
     if input_usuario:
-        mensagens.append({'role': 'user', 'content': input_usuario})
-        mensagens = geracao_texto(mensagens, texto_completo_pdfs, prompt)
-        for mensagem in mensagens:
-            if mensagem['role'] == 'assistant':
-                st.write(f"Joli: {mensagem['content']}")
+        st.session_state['historico'].append({'role': 'user', 'content': input_usuario})
+        mensagens = geracao_texto(st.session_state['historico'], texto_completo_pdfs, prompt)
+        st.session_state['historico'] = mensagens
+
+# Exibir o histórico de mensagens
+for mensagem in st.session_state['historico']:
+    if mensagem['role'] == 'user':
+        st.write(f"Cliente: {mensagem['content']}")
+    elif mensagem['role'] == 'assistant':
+        st.write(f"Joli: {mensagem['content']}")
