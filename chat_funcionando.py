@@ -101,12 +101,16 @@ def limitar_historico(mensagens, max_mensagens=5):
         return mensagens[-max_mensagens:]  # Mantém apenas as últimas interações
     return mensagens
 
+
+prompt = "Você é um assistente bem humorado especialista em turismo. 
+Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá de forma curta pegando informações dos passeios e tirando as dúvidas dos turistas."
+
 # Função para gerar respostas a partir das partes de texto
 def gerar_respostas(partes_texto, prompt):
     respostas = []
     for parte in partes_texto:
         mensagens = [
-            {"role": "system", "content": "Você é um assistente bem humorado especialista em turismo. Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá de forma curta pegando informações dos passeios e tirando as dúvidas dos turistas. As respostas serão curtas e objetivas."},
+            {"role": "system", "content": "Você é um especialista em turismo e vinhos da vinícola Jolimont. Responda de forma leve e moderna"},
             {"role": "user", "content": parte + "\n\n" + prompt}
         ]
         resposta = openai.ChatCompletion.create(
@@ -160,9 +164,6 @@ st.title("Bem-vindo ao chat da Jolimont🍷 :)")
 # Inicializar mensagens na sessão se ainda não existirem
 if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "assistant", "content": "Como posso te ajudar hoje?"}]
-    
-prompt = "Você é um assistente bem humorado especialista em turismo. 
-Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá de forma curta pegando informações dos passeios e tirando as dúvidas dos turistas."
 
 # Exibir as mensagens anteriores do chat
 for msg in st.session_state["messages"]:
