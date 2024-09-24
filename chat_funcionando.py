@@ -91,9 +91,15 @@ def dividir_texto(texto, max_tokens):
 
     return partes
 
-# Dividir o texto completo em partes menores
-max_tokens = 1000  # Ajuste conforme necessário
+# Dividir o texto completo em partes menores com limite ajustado
+max_tokens = 500  # Ajuste conforme necessário
 partes_texto = dividir_texto(texto_completo_pdfs, max_tokens)
+
+# Função para limitar o histórico de mensagens
+def limitar_historico(mensagens, max_mensagens=5):
+    if len(mensagens) > max_mensagens:
+        return mensagens[-max_mensagens:]  # Mantém apenas as últimas interações
+    return mensagens
 
 # Função para gerar respostas a partir das partes de texto
 def gerar_respostas(partes_texto, prompt):
@@ -104,17 +110,18 @@ def gerar_respostas(partes_texto, prompt):
             {"role": "user", "content": parte + "\n\n" + prompt}
         ]
         resposta = openai.ChatCompletion.create(
-            model="gpt-4o-mini",
+            model="gpt-4",
             messages=mensagens
         )
         respostas.append(resposta['choices'][0]['message']['content'])
     return respostas
 
-
+# Função para contar tokens
 def contar_tokens(texto):
     enc = tiktoken.get_encoding('cl100k_base')
     return len(enc.encode(texto))
 
+# Função para geração de texto
 def geracao_texto(mensagens, contexto, prompt):
     chave_cache = tuple((mensagem['role'], mensagem['content']) for mensagem in mensagens)
     
@@ -125,7 +132,7 @@ def geracao_texto(mensagens, contexto, prompt):
         return mensagens
     
     resposta = openai.ChatCompletion.create(
-        model="gpt-4o-mini",
+        model="gpt-4",
         messages=[{'role': 'system', 'content': prompt}] + mensagens + [{'role': 'system', 'content': contexto}],
         temperature=0,
         max_tokens=800,
@@ -160,6 +167,7 @@ input_usuario = st.text_input('Faça sua pergunta:', '')
 if st.button('Enviar'):
     if input_usuario:
         mensagens.append({'role': 'user', 'content': input_usuario})
+        mensagens = limitar_historico(mensagens)  # Limitar o histórico para evitar excesso de tokens
         mensagens = geracao_texto(mensagens, texto_completo_pdfs, prompt)
         for mensagem in mensagens:
             if mensagem['role'] == 'assistant':
