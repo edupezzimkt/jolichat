@@ -101,9 +101,7 @@ def limitar_historico(mensagens, max_mensagens=5):
         return mensagens[-max_mensagens:]  # Mantém apenas as últimas interações
     return mensagens
 
-
-prompt = "Você é um assistente bem humorado especialista em turismo. 
-Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá de forma curta pegando informações dos passeios e tirando as dúvidas dos turistas."
+prompt = """Você é um assistente bem humorado especialista em turismo. Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá de forma curta pegando informações dos passeios e tirando as dúvidas dos turistas."""
 
 # Função para gerar respostas a partir das partes de texto
 def gerar_respostas(partes_texto, prompt):
