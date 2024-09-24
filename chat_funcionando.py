@@ -101,7 +101,7 @@ def geracao_texto(pergunta_usuario, contexto, prompt):
     return texto_resposta
 
 # Streamlit interface
-st.title("Bem-vindo ao chat da Jolimont🍷 :)")
+st.title("Bem-vindo ao chat da Jolimont🍷")
 
 # Inicializar mensagens na sessão se ainda não existirem
 if "messages" not in st.session_state:
