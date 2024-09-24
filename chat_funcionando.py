@@ -59,31 +59,6 @@ caminhos_pdfs = obter_caminhos_pdfs(pasta_pdfs)
 textos_pdfs = [carregar_ou_processar_pdf(caminho, cache) for caminho in caminhos_pdfs]
 texto_completo_pdfs = "\n".join(textos_pdfs)
 
-# Função para dividir o texto em partes menores
-def dividir_texto(texto, max_tokens):
-    palavras = texto.split()
-    partes = []
-    parte_atual = []
-    tokens_atual = 0
-
-    for palavra in palavras:
-        tokens_palavra = len(palavra) // 4  # Estimativa de tokens
-        if tokens_atual + tokens_palavra > max_tokens:
-            partes.append(" ".join(parte_atual))
-            parte_atual = []
-            tokens_atual = 0
-        parte_atual.append(palavra)
-        tokens_atual += tokens_palavra
-
-    if parte_atual:
-        partes.append(" ".join(parte_atual))
-
-    return partes
-
-# Dividir o texto completo em partes menores com limite ajustado
-max_tokens = 500
-partes_texto = dividir_texto(texto_completo_pdfs, max_tokens)
-
 # Função para limitar o histórico de mensagens
 def limitar_historico(mensagens, max_mensagens=5):
     if len(mensagens) > max_mensagens:
@@ -94,24 +69,22 @@ def limitar_historico(mensagens, max_mensagens=5):
 prompt = """Você é um assistente bem humorado especialista em turismo. Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá de forma curta pegando informações dos passeios e tirando as dúvidas dos turistas."""
 
 # Função para geração de texto usando o contexto e o prompt
-def geracao_texto(mensagens, contexto, prompt):
-    chave_cache = tuple((mensagem['role'], mensagem['content']) for mensagem in mensagens)
-    
+def geracao_texto(pergunta_usuario, contexto, prompt):
+    chave_cache = (pergunta_usuario,)
+
     if chave_cache in cache:
         resposta_cache = cache[chave_cache]
-        mensagens.append({'role': 'assistant', 'content': resposta_cache})
-        return mensagens
+        return resposta_cache
     
     # Montar a mensagem com o prompt e contexto
-    mensagem_input = {
-        "role": "system",
-        "content": prompt + "\n\n" + contexto
-    }
-    mensagens_completas = [mensagem_input] + mensagens
+    mensagens = [
+        {"role": "system", "content": prompt + "\n\n" + contexto},
+        {"role": "user", "content": pergunta_usuario}
+    ]
     
     resposta = openai.ChatCompletion.create(
         model="gpt-4o-mini",
-        messages=mensagens_completas,
+        messages=mensagens,
         temperature=0.5,  # Um pouco de criatividade no tom
         max_tokens=150,   # Limite de tokens para respostas mais curtas
         top_p=1,
@@ -121,12 +94,11 @@ def geracao_texto(mensagens, contexto, prompt):
 
     texto_resposta = resposta['choices'][0]['message']['content']
     
-    # Adicionar a resposta ao cache e às mensagens
-    mensagens.append({'role': 'assistant', 'content': texto_resposta})
+    # Adicionar a resposta ao cache
     cache[chave_cache] = texto_resposta
     salvar_cache(cache, cache_arquivo)
     
-    return mensagens
+    return texto_resposta
 
 # Streamlit interface
 st.title("Bem-vindo ao chat da Jolimont🍷 :)")
@@ -147,10 +119,11 @@ if pergunta_usuario := st.chat_input("Faça sua pergunta"):
         st.write(pergunta_usuario)
 
     # Gerar resposta usando os textos dos PDFs carregados e o prompt
-    st.session_state["messages"] = geracao_texto(st.session_state["messages"], texto_completo_pdfs, prompt)
+    resposta_assistente = geracao_texto(pergunta_usuario, texto_completo_pdfs, prompt)
+    
+    # Adicionar a resposta ao estado da sessão
+    st.session_state["messages"].append({"role": "assistant", "content": resposta_assistente})
     
     # Exibir a resposta gerada
-    for msg in st.session_state["messages"]:
-        if msg["role"] == "assistant":
-            with st.chat_message("assistant"):
-                st.write(msg["content"])
+    with st.chat_message("assistant"):
+        st.write(resposta_assistente)
