@@ -8,15 +8,6 @@ import streamlit as st
 # Carregar a chave da OpenAI dos secrets do Streamlit
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-class Chat:
-    def __init__(self):
-        # Inicializa o chat
-        pass
-
-    def get_response(self, message):
-        # Processa a mensagem e retorna uma resposta
-        return "Resposta do chat"
-    
 # Função para extrair texto do PDF
 def extrair_texto_pdf(caminho_pdf):
     documento = fitz.open(caminho_pdf)
@@ -37,7 +28,6 @@ def carregar_cache(nome_arquivo):
 
 # Função para salvar cache em um arquivo JSON
 def salvar_cache(cache, arquivo):
-    # Converte as chaves do dicionário para strings
     cache_convertido = {str(k): v for k, v in cache.items()}
     with open(arquivo, 'w', encoding='utf-8') as f:
         json.dump(cache_convertido, f, ensure_ascii=False, indent=4)
@@ -49,7 +39,6 @@ cache = carregar_cache(cache_arquivo)
 # Carregar texto extraído dos PDFs com cache
 def carregar_ou_processar_pdf(caminho_pdf, cache):
     if caminho_pdf in cache:
-        print(f"Carregado do cache: {caminho_pdf}")
         return cache[caminho_pdf]
     texto_pdf = extrair_texto_pdf(caminho_pdf)
     cache[caminho_pdf] = texto_pdf
@@ -92,67 +81,50 @@ def dividir_texto(texto, max_tokens):
     return partes
 
 # Dividir o texto completo em partes menores com limite ajustado
-max_tokens = 500  # Ajuste conforme necessário
+max_tokens = 500
 partes_texto = dividir_texto(texto_completo_pdfs, max_tokens)
 
 # Função para limitar o histórico de mensagens
 def limitar_historico(mensagens, max_mensagens=5):
     if len(mensagens) > max_mensagens:
-        return mensagens[-max_mensagens:]  # Mantém apenas as últimas interações
+        return mensagens[-max_mensagens:]
     return mensagens
 
+# Prompt específico
 prompt = """Você é um assistente bem humorado especialista em turismo. Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá de forma curta pegando informações dos passeios e tirando as dúvidas dos turistas."""
 
-# Função para gerar respostas a partir das partes de texto
-def gerar_respostas(partes_texto, prompt):
-    respostas = []
-    for parte in partes_texto:
-        mensagens = [
-            {"role": "system", "content": "Você é um especialista em turismo e vinhos da vinícola Jolimont. Responda de forma leve e moderna"},
-            {"role": "user", "content": parte + "\n\n" + prompt}
-        ]
-        resposta = openai.ChatCompletion.create(
-            model="gpt-4o-mini",
-            messages=mensagens
-        )
-        respostas.append(resposta['choices'][0]['message']['content'])
-    return respostas
-
-# Função para contar tokens
-def contar_tokens(texto):
-    enc = tiktoken.get_encoding('cl100k_base')
-    return len(enc.encode(texto))
-
-# Função para geração de texto
+# Função para geração de texto usando o contexto e o prompt
 def geracao_texto(mensagens, contexto, prompt):
     chave_cache = tuple((mensagem['role'], mensagem['content']) for mensagem in mensagens)
     
     if chave_cache in cache:
         resposta_cache = cache[chave_cache]
-        print("Joli (from cache): ", resposta_cache)
         mensagens.append({'role': 'assistant', 'content': resposta_cache})
         return mensagens
     
+    # Montar a mensagem com o prompt e contexto
+    mensagem_input = {
+        "role": "system",
+        "content": prompt + "\n\n" + contexto
+    }
+    mensagens_completas = [mensagem_input] + mensagens
+    
     resposta = openai.ChatCompletion.create(
         model="gpt-4o-mini",
-        messages=[{'role': 'system', 'content': prompt}] + mensagens + [{'role': 'system', 'content': contexto}],
-        temperature=0,
-        max_tokens=800,
+        messages=mensagens_completas,
+        temperature=0.5,  # Um pouco de criatividade no tom
+        max_tokens=150,   # Limite de tokens para respostas mais curtas
+        top_p=1,
+        frequency_penalty=0.2,
+        presence_penalty=0.6,
     )
 
-    print('Joli: ', end='')
-    texto_completo = ''
-
-    for resposta_stream in resposta['choices']:
-        texto = resposta_stream['message']['content']
-        if texto:
-            print(texto, end='')
-            texto_completo += texto
-    print()
+    texto_resposta = resposta['choices'][0]['message']['content']
     
-    mensagens.append({'role': 'assistant', 'content': texto_completo})
-    cache[chave_cache] = texto_completo  # Armazena a resposta no cache
-    salvar_cache(cache, cache_arquivo)  # Salva o cache em disco
+    # Adicionar a resposta ao cache e às mensagens
+    mensagens.append({'role': 'assistant', 'content': texto_resposta})
+    cache[chave_cache] = texto_resposta
+    salvar_cache(cache, cache_arquivo)
     
     return mensagens
 
@@ -168,11 +140,11 @@ for msg in st.session_state["messages"]:
     st.chat_message(msg["role"]).write(msg["content"])
 
 # Input de pergunta do usuário
-if prompt := st.chat_input("Faça sua pergunta"):
+if pergunta_usuario := st.chat_input("Faça sua pergunta"):
     # Adicionar a mensagem do usuário ao estado da sessão
-    st.session_state["messages"].append({"role": "user", "content": prompt})
+    st.session_state["messages"].append({"role": "user", "content": pergunta_usuario})
     with st.chat_message("user"):
-        st.write(prompt)
+        st.write(pergunta_usuario)
 
     # Gerar resposta usando os textos dos PDFs carregados e o prompt
     st.session_state["messages"] = geracao_texto(st.session_state["messages"], texto_completo_pdfs, prompt)
