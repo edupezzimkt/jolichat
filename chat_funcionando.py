@@ -125,5 +125,5 @@ if pergunta_usuario := st.chat_input("Faça sua pergunta"):
     st.session_state["messages"].append({"role": "assistant", "content": resposta_assistente})
     
     # Exibir a resposta gerada
-    with st.chat_message("assistant", avatar="🍷"):
+    with st.chat_message("assistant"):
         st.write(resposta_assistente)
