@@ -104,7 +104,7 @@ def gerar_respostas(partes_texto, prompt):
             {"role": "user", "content": parte + "\n\n" + prompt}
         ]
         resposta = openai.ChatCompletion.create(
-            model="gpt-o1-preview",
+            model="gpt-4o-mini",
             messages=mensagens
         )
         respostas.append(resposta['choices'][0]['message']['content'])
@@ -125,7 +125,7 @@ def geracao_texto(mensagens, contexto, prompt):
         return mensagens
     
     resposta = openai.ChatCompletion.create(
-        model="gpt-o1-preview",
+        model="gpt-4o-mini",
         messages=[{'role': 'system', 'content': prompt}] + mensagens + [{'role': 'system', 'content': contexto}],
         temperature=0,
         max_tokens=800,
