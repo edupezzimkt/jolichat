@@ -154,23 +154,29 @@ def geracao_texto(mensagens, contexto, prompt):
     
     return mensagens
 
-
-
 # Streamlit interface
 st.title("Bem-vindo ao chat da Jolimont🍷 :)")
 
-mensagens = []
-prompt = """Você é um assistente bem humorado especialista em turismo. 
-Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá de forma 
-curta pegando informações dos passeios e tirando as dúvidas dos turistas."""
+# Inicializar mensagens na sessão se ainda não existirem
+if "messages" not in st.session_state:
+    st.session_state["messages"] = [{"role": "assistant", "content": "Como posso te ajudar hoje?"}]
 
-input_usuario = st.text_input('Faça sua pergunta:', '')
+# Exibir as mensagens anteriores do chat
+for msg in st.session_state["messages"]:
+    st.chat_message(msg["role"]).write(msg["content"])
 
-if st.button('Enviar'):
-    if input_usuario:
-        mensagens.append({'role': 'user', 'content': input_usuario})
-        mensagens = limitar_historico(mensagens)  # Limitar o histórico para evitar excesso de tokens
-        mensagens = geracao_texto(mensagens, texto_completo_pdfs, prompt)
-        for mensagem in mensagens:
-            if mensagem['role'] == 'assistant':
-                st.write(f"Joli: {mensagem['content']}")
+# Input de pergunta do usuário
+if prompt := st.chat_input("Faça sua pergunta"):
+    # Adicionar a mensagem do usuário ao estado da sessão
+    st.session_state["messages"].append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.write(prompt)
+
+    # Gerar resposta usando os textos dos PDFs carregados e o prompt
+    st.session_state["messages"] = geracao_texto(st.session_state["messages"], texto_completo_pdfs, prompt)
+    
+    # Exibir a resposta gerada
+    for msg in st.session_state["messages"]:
+        if msg["role"] == "assistant":
+            with st.chat_message("assistant"):
+                st.write(msg["content"])
