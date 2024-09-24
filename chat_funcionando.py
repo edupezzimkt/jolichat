@@ -154,6 +154,8 @@ def geracao_texto(mensagens, contexto, prompt):
     
     return mensagens
 
+
+
 st.title("Bem-vindo ao chat da Jolimont🍷 :)")
 
 mensagens = []
@@ -161,15 +163,11 @@ prompt = """Você é um assistente bem humorado especialista em turismo.
 Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá de forma 
 curta pegando informações dos passeios e tirando as dúvidas dos turistas."""
 
-# Define uma função para limpar o campo de texto
-def limpar_input():
-    st.session_state["input"] = ""
-
-# Adiciona um estado padrão para o input
+# Adiciona um estado padrão para o input se não estiver presente
 if "input" not in st.session_state:
     st.session_state["input"] = ""
 
-input_usuario = st.text_input('Faça sua pergunta:', key="input")
+input_usuario = st.text_input('Faça sua pergunta:', value=st.session_state["input"], key="input")
 
 if st.button('Enviar'):
     if input_usuario:
@@ -182,5 +180,5 @@ if st.button('Enviar'):
             if mensagem['role'] == 'assistant':
                 st.write(f"Joli: {mensagem['content']}")
         
-        # Limpa o campo de input após o envio
-        limpar_input()
+        # Limpar o campo de input após o envio
+        st.session_state["input"] = ""  # Limpa o input aqui
