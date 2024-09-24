@@ -105,7 +105,7 @@ st.title("Bem-vindo ao chat da Jolimont🍷")
 
 # Inicializar mensagens na sessão se ainda não existirem
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "Como posso te ajudar hoje?"}]
+    st.session_state["messages"] = [{"role": "assistant", "content": "Olá, estou aqui para responder sobre produtos e passeios.🍇"}]
 
 # Exibir as mensagens anteriores do chat
 for msg in st.session_state["messages"]:
