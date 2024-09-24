@@ -86,7 +86,7 @@ def geracao_texto(pergunta_usuario, contexto, prompt):
         model="gpt-4o-mini",
         messages=mensagens,
         temperature=0.5,  # Um pouco de criatividade no tom
-        max_tokens=150,   # Limite de tokens para respostas mais curtas
+        max_tokens=500,   # Limite de tokens para respostas mais curtas
         top_p=1,
         frequency_penalty=0.2,
         presence_penalty=0.6,
