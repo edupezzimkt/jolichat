@@ -156,6 +156,7 @@ def geracao_texto(mensagens, contexto, prompt):
 
 
 
+# Streamlit interface
 st.title("Bem-vindo ao chat da Jolimont🍷 :)")
 
 mensagens = []
@@ -163,22 +164,13 @@ prompt = """Você é um assistente bem humorado especialista em turismo.
 Seu nome é Joli e vai usar os PDFs que estão na pasta 'arquivos' e responderá de forma 
 curta pegando informações dos passeios e tirando as dúvidas dos turistas."""
 
-# Adiciona um estado padrão para o input se não estiver presente
-if "input" not in st.session_state:
-    st.session_state["input"] = ""
-
-input_usuario = st.text_input('Faça sua pergunta:', value=st.session_state["input"], key="input")
+input_usuario = st.text_input('Faça sua pergunta:', '')
 
 if st.button('Enviar'):
     if input_usuario:
         mensagens.append({'role': 'user', 'content': input_usuario})
         mensagens = limitar_historico(mensagens)  # Limitar o histórico para evitar excesso de tokens
         mensagens = geracao_texto(mensagens, texto_completo_pdfs, prompt)
-        
-        # Exibir a resposta do assistente
         for mensagem in mensagens:
             if mensagem['role'] == 'assistant':
                 st.write(f"Joli: {mensagem['content']}")
-        
-        # Limpar o campo de input após o envio
-        st.session_state["input"] = ""  # Limpa o input aqui
