@@ -102,7 +102,7 @@ def geracao_texto(pergunta_usuario, contexto, prompt):
 
 # Streamlit interface
 
-# CSS para esconder o menu, rodapé e o botão no mobile
+# CSS para esconder o botão flutuante no mobile usando seletor mais específico
 hide_streamlit_style = """
     <style>
     /* Esconde a barra de ferramentas no desktop */
@@ -114,8 +114,11 @@ hide_streamlit_style = """
     /* Esconde o cabeçalho */
     header {visibility: hidden;}
 
-    /* Esconde o botão flutuante no mobile */
-    .stActionButton {display: none;}
+    /* Esconde o botão flutuante no mobile com seletor CSS baseado no XPath */
+    [data-testid="stSidebarNav"] {display: none;} /* Este deve funcionar para a versão mais recente do Streamlit */
+    
+    /* Seleção direta com base no XPath convertido */
+    div[role="button"] > svg {display: none;} /* Seletor CSS para o botão flutuante do menu */
     </style>
     """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
