@@ -102,12 +102,22 @@ def geracao_texto(pergunta_usuario, contexto, prompt):
 
 # Streamlit interface
 
+# CSS para esconder o menu, rodapé e o botão no mobile
 hide_streamlit_style = """
-<style>     
-MainMenu {visibility: hidden;}     
-footer {visibility: hidden;}     
-header {visibility: hidden;}     
-</style>     """
+    <style>
+    /* Esconde a barra de ferramentas no desktop */
+    MainMenu {visibility: hidden;}
+    
+    /* Esconde o rodapé */
+    footer {visibility: hidden;}
+    
+    /* Esconde o cabeçalho */
+    header {visibility: hidden;}
+
+    /* Esconde o botão flutuante no mobile */
+    .stActionButton {display: none;}
+    </style>
+    """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 st.title("Bem-vindo ao chat da Jolimont🍷")
