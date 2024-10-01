@@ -68,24 +68,8 @@ def limitar_historico(mensagens, max_mensagens=5):
 # Prompt específico
 prompt = """Você é um assistente bem humorado especialista em turismo e um sommelier internacional. Seu nome é Joli e vai responder de forma informal e usar os PDFs que estão na pasta 'arquivos' e responderá de forma curta pegando informações dos passeios e tirando as dúvidas dos turistas.Lembre-se que o cliente pode pedir informações sobre produtos e sobre os passeios (tours, visitação), quando a convera for sobre produtos direcionar para informações dos produtos e contatos, quando for sobre turismo e passeio usar as informações dos passeios."""
 
-# Função para montar o contexto completo da conversa
-def obter_contexto_completo(mensagens, max_mensagens=10):
-    # Limitar o histórico de mensagens para evitar sobrecarregar o contexto
-    mensagens_limitadas = limitar_historico(mensagens, max_mensagens)
-    
-    contexto = ""
-    for mensagem in mensagens_limitadas:
-        if mensagem["role"] == "user":
-            contexto += f"Usuário: {mensagem['content']}\n"
-        else:
-            contexto += f"Joli: {mensagem['content']}\n"
-    return contexto
-
 # Função para geração de texto usando o contexto e o prompt
-def geracao_texto(pergunta_usuario, prompt):
-    # Obter o contexto completo da conversa com base nas mensagens anteriores
-    contexto = obter_contexto_completo(st.session_state["messages"])
-    
+def geracao_texto(pergunta_usuario, contexto, prompt):
     chave_cache = (pergunta_usuario,)
 
     if chave_cache in cache:
@@ -94,8 +78,8 @@ def geracao_texto(pergunta_usuario, prompt):
     
     # Montar a mensagem com o prompt e contexto
     mensagens = [
-        {"role": "system", "content": prompt},
-        {"role": "user", "content": contexto + f"\nUsuário: {pergunta_usuario}"}
+        {"role": "system", "content": prompt + "\n\n" + contexto},
+        {"role": "user", "content": pergunta_usuario}
     ]
     
     resposta = openai.ChatCompletion.create(
@@ -156,8 +140,8 @@ if pergunta_usuario := st.chat_input("Faça sua pergunta"):
     with st.chat_message("user"):
         st.write(pergunta_usuario)
 
-    # Gerar resposta usando o histórico de conversas, os textos dos PDFs carregados e o prompt
-    resposta_assistente = geracao_texto(pergunta_usuario, prompt)
+    # Gerar resposta usando os textos dos PDFs carregados e o prompt
+    resposta_assistente = geracao_texto(pergunta_usuario, texto_completo_pdfs, prompt)
     
     # Adicionar a resposta ao estado da sessão
     st.session_state["messages"].append({"role": "assistant", "content": resposta_assistente})
