@@ -37,14 +37,15 @@ cache_arquivo = 'cache.json'
 cache = carregar_cache(cache_arquivo)
 
 # Carregar texto extraído dos PDFs com cache
-def carregar_ou_processar_pdf(caminho_pdf, cache):
+def carregar_ou_processar_pdf_resumido(caminho_pdf, cache, max_tokens=1000):
     if caminho_pdf in cache:
         return cache[caminho_pdf]
     texto_pdf = extrair_texto_pdf(caminho_pdf)
+    texto_pdf = texto_pdf[:max_tokens]  # Limita o tamanho do texto para evitar ultrapassar os tokens
     cache[caminho_pdf] = texto_pdf
     salvar_cache(cache, cache_arquivo)
     return texto_pdf
-
+    
 # Função para obter todos os PDFs em uma pasta
 def obter_caminhos_pdfs(pasta):
     return [os.path.join(pasta, f) for f in os.listdir(pasta) if f.endswith('.pdf')]
@@ -60,7 +61,7 @@ textos_pdfs = [carregar_ou_processar_pdf(caminho, cache) for caminho in caminhos
 texto_completo_pdfs = "\n".join(textos_pdfs)
 
 # Função para limitar o histórico de mensagens
-def limitar_historico(mensagens, max_mensagens=5):
+def limitar_historico(mensagens, max_mensagens=3):
     if len(mensagens) > max_mensagens:
         return mensagens[-max_mensagens:]
     return mensagens
