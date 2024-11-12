@@ -37,7 +37,7 @@ cache_arquivo = 'cache.json'
 cache = carregar_cache(cache_arquivo)
 
 # Carregar texto extraído dos PDFs com cache
-def carregar_ou_processar_pdf_resumido(caminho_pdf, cache, max_tokens=1000):
+def carregar_ou_processar_pdf(caminho_pdf, cache, max_tokens=1000):
     if caminho_pdf in cache:
         return cache[caminho_pdf]
     texto_pdf = extrair_texto_pdf(caminho_pdf)
