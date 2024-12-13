@@ -87,7 +87,7 @@ def geracao_texto(pergunta_usuario, contexto, prompt):
     ]
     
     resposta = openai.ChatCompletion.create(
-        model="gpt-4o-mini", # , gpt-4o-mini gpt-3.5-turbo
+        model="gpt-3.5-turbo", # , gpt-4o-mini gpt-3.5-turbo
         messages=mensagens,
         temperature=0.5,  # Um pouco de criatividade no tom
         max_tokens=500,   # Limite de tokens para respostas mais curtas
