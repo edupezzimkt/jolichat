@@ -122,6 +122,15 @@ https://vinicolajolimont.com.br/
 
 ou pelo whatsapp (54) 99948-7840
 
+Em 1948, o Vale do Morro Calçado, em Canela, RS, foi o local escolhido por um francês para o cultivo das primeiras uvas na Região das Hortênsias: assim nascia a história da Vitivinícola Jolimont.
+
+Atualmente é uma das vinícolas mais visitadas e premiadas do Brasil, com rótulos consagrados em concursos internacionais de grande prestígio. O segredo de todo esse sucesso, está no amor à terra, às pessoas e ao vinho.
+
+A Tradição sustenta raízes, a Inovação faz ir mais longe. De taça em taça, a Jolimont segue sua jornada com o propósito de promover momentos únicos através de vinhos autênticos e experiências inesquecíveis.
+
+HORÁRIOS DE ABERTURA
+Diariamente, das 9h às 16h30.
+A Jolimont funciona normalmente aos domingos, feriados e dias de chuva
 """
 
 # Função para geração de texto usando o contexto e o prompt
