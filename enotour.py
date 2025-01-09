@@ -73,7 +73,6 @@ e responderá de forma curta pegando informações dos passeios e tirando as dú
 Lembre-se que o cliente pode pedir informações sobre produtos e sobre os passeios (tours, visitação)
 
 Conheça nossos passeios:
-Open Jolimont – Arrivée Verão
 Open Jolimont – Entre Vinhos
 Tour Jolimont
 Tour Premium
@@ -81,12 +80,6 @@ Piquenique
 Perdido de casamento
 Felsen Beer Tour + Tour Jolimont
 Pisa das uvas
-
-
-
-Passeio: Open Jolimont – Arrivée Verão 
-
-Descrição: Open Bar de Vinhos Brancos, Rosês e Espumantes Venha celebrar a chegada do verão entre os parreirais com uma experiência única de degustação de vinhos e espumantes, enquanto aprecia a natureza.  Em um ambiente  descontraído, você poderá desfrutar de uma tarde perfeita com espumantes refrescantes, vinhos brancos e rosês, em um piquenique ao ar livre. Venha brindar com a gente ao início do verão com o melhor dos nossos vinhos, enquanto compartilha momentos agradáveis em boa companhia.   O evento será no dia 21/12/2024  Horário: das 13h às 17h30min  Duração da visita: em torno de 4h30. Localizado Vitivinícola Jolimont, em Canela, RS.   Em caso de chuva o evento será remarcado para uma nova data. Passaremos todas as informações, caso necessário.   O que está incluso: O evento conta com uma degustação (open bar) de vinhos brancos, rosês e espumantes, com rótulos cuidadosamente selecionados. Neste evento exclusivo, a atração gastronômica será a cesta de piquenique, especialmente preparada para a ocasião, oferecendo uma seleção de queijos, pães, frutas e muito mais, que harmonizam perfeitamente com nossos espumantes, vinhos brancos e rosês. A cesta de piquenique serve para duas pessoas.  Para tornar a tarde ainda mais especial, uma seleção de músicas animadas irá embalar o clima. Ao chegar no evento, você receberá um chapéu da Jolimont e uma taça especial como lembrança.   Como vai ser o evento? Boas-vindas Ao chegar na Vinícola, valide seu ingresso na bilheteria, pegue sua taça e nossa equipe irá te conduzir até o local do evento.  . O evento ocorre no Mirante junto as parreiras Após uma encantadora caminhada pelos parreirais, você chega ao Mirante, o cenário deslumbrante do nosso evento, com uma vista incrível do vale. A música animada preenche o dia para uma tarde de degustação, enquanto os vinhos e espumantes Relatório de Passeios elevam ainda mais essa experiência única. Open bar de espumantes Durante todo o evento, você poderá degustar uma seleção exclusiva de vinhos brancos, rosês e espumantes, tornando sua tarde ainda mais agradável, em perfeita harmonia com a natureza.  Gastronomia A experiência gastronômica inclui uma cesta de piquenique para duas pessoas, especialmente montada para o evento. Está incluso: Queijo; Salame; Copa; Morango; Uva; Pães; Antepasto; Grissini; Geleia; Croissant; Grãos; BrownieMúsica Enquanto você aprecia nossos rótulos a música animada toma conta do ambiente durante o evento.  Loja Degustou nossos rótulos e se apaixonou? Aproveite a oportunidade para adquiri-los durante o evento, com a orientação dos nossos sommeliers mais experientes. Dica Sugerimos que você venha com roupas confortáveis para aproveitar melhor o evento! Não se esqueça de trazer protetor solar e repelente, mas não se preocupe, teremos disponíveis durante o evento também.   Mesas e paletes serão disponibilizadas, com escolha conforme ordem de chegada. Descontos para ingresso antecipado. Ingressos de R$ 380,00 por apenas R$ 310,00/2 pessoas 18% OFF ao comprar o ingresso online visualizando agora GARANTIR MEU INGRESSO Vagas limitadas. 
 
 
 Passeio: Open Jolimont – Entre Vinhos 
