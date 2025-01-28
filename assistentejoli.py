@@ -4,7 +4,6 @@ import json
 import os
 import tiktoken
 import streamlit as st
-import time
 
 # Carregar a chave da OpenAI dos secrets do Streamlit
 openai.api_key = st.secrets["OPENAI_API_KEY"]
@@ -110,15 +109,6 @@ def geracao_texto(pergunta_usuario, contexto, prompt):
     cache[chave_cache] = texto_resposta
     salvar_cache(cache, cache_arquivo)
     
-
-      # Exibir a resposta com efeito de digitação no Streamlit
-    resposta_streamlit = st.empty()  # Cria um placeholder para a resposta
-
-    for i in range(len(texto_resposta)):
-        # Mostra uma letra por vez
-        resposta_streamlit.write(texto_resposta[:i+1])
-        time.sleep(0.05)  # Ajuste a velocidade da "digitação"
-
     return texto_resposta
 
 # Streamlit interface
